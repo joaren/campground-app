@@ -21,7 +21,7 @@ const CampgroundSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:'User'
     },
-    reviews: [ //array bc one-to-many relationship (reviews are in an array)
+    reviews: [ 
         {
         type: Schema.Types.ObjectId,
         ref: 'Review'
@@ -39,4 +39,4 @@ CampgroundSchema.post('findOneAndDelete', async function (doc) {
     }
 })
 
-module.exports = mongoose.model('Campground', CampgroundSchema) //need to export for it to be used in other docs
+module.exports = mongoose.model('Campground', CampgroundSchema) 
