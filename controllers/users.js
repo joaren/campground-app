@@ -42,4 +42,3 @@ module.exports.logout = (req, res, next) => {
 }
 
 
-//req.body is this: {"username":"sdfgsdfgds","email":"sdfgsdfgdsfg@asdfadsf","password":"asdfasdfasdf"}
