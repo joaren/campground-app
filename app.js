@@ -1,14 +1,14 @@
-if (process.env.NODE_ENV !== "production") { //if were running in development mode (normal), require the below package
+if (process.env.NODE_ENV !== "production") { 
     require('dotenv').config();
 }
 
-console.log(process.env.SECRET) //so ppl know theres a .env 
+console.log(process.env.SECRET) 
 console.log(process.env.API_KEY)
 
 
-const express = require('express'); //npm i express
-const path = require('path'); //views directory, associated with ejs
-const mongoose = require('mongoose'); //npm i mongoose
+const express = require('express'); 
+const path = require('path'); 
+const mongoose = require('mongoose'); 
 const ejsMate = require('ejs-mate')
 const ExpressError = require('./utils/ExpressError')
 const session = require('express-session')
@@ -21,13 +21,11 @@ const userRoutes = require('./Routes/user');
 const campgrounds = require('./Routes/campgrounds');
 const reviews = require('./Routes/reviews');
 
-const methodOverride = require('method-override') //upd8 part of crud, need to npm install method-override
-
+const methodOverride = require('method-override') 
 
 mongoose.connect('mongodb://localhost:27017/yelpcamp', {useNewUrlParser: true, useUnifiedTopology: true }) 
-//yelpcamp: name of db we're gonna use (in mongosh : 'use yelpcamp')
     .then(() => {
-        console.log("MONGO CONNECTION OPEN!!!") //confirms mongo is working
+        console.log("MONGO CONNECTION OPEN!!!") 
     })
     .catch(err => {
         console.log("OH NO MONGO CXN ERROR!!!!")
@@ -35,18 +33,18 @@ mongoose.connect('mongodb://localhost:27017/yelpcamp', {useNewUrlParser: true, u
     })
 
 
-const app = express(); //express
+const app = express(); 
 
 app.engine('ejs', ejsMate)
-app.set('views', path.join(__dirname, 'views')); //ejs, connects with path
-app.set('view engine', 'ejs') //ejs
+app.set('views', path.join(__dirname, 'views')); 
+app.set('view engine', 'ejs') 
 
-app.use(express.urlencoded({extended: true})) //express
-app.use(methodOverride('_method')) //method override
+app.use(express.urlencoded({extended: true})) 
+app.use(methodOverride('_method')) 
 app.use(express.static(path.join(__dirname, 'public')))
 
 const sessionConfig = {
-    secret: 'thisshouldbeabettersecret',
+    //secret: ' ',
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -62,10 +60,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 
-passport.serializeUser(User.serializeUser()); //serialize: storing a user in a session
+passport.serializeUser(User.serializeUser()); 
 passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => { //have access to currentUser, success, error,,
+app.use((req, res, next) => { 
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
@@ -78,21 +76,21 @@ app.use('/', userRoutes);
 app.use('/campgrounds', campgrounds)
 app.use('/campgrounds/:id/reviews', reviews)
 
-app.get('/', (req,res) => { //home page
+app.get('/', (req,res) => { 
     res.render('home')
 })
 
 
 app.all('*', (req, res, next) => {
-    next(new ExpressError('Page not found', 404)) //use this in app.use
+    next(new ExpressError('Page not found', 404)) 
 })
 
 app.use((err, req, res, next) => {
-    const {statusCode = 500} = err; //err is ExpressError
+    const {statusCode = 500} = err; 
     if(!err.message) err.message = 'oh no, something went wrong'
-    res.status(statusCode).render('error', {err}) //outputs message and code - need this or else the code above it wont be able to output
+    res.status(statusCode).render('error', {err}) 
 })
 
 app.listen(3000, () => { 
-    console.log("app is listening on port 3000!") //confirms node is working
+    console.log("app is listening on port 3000!") 
 })
